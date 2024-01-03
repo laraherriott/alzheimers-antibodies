@@ -125,7 +125,7 @@ def error(x):
     return csf_relative + plasma_relative + plasma_clear_relative + csf_clear_relative + 4*steady_state_error
 
 
-objective = pypesto.Objective(fun=error, res=error)
+objective = pypesto.Objective(fun=error)#, res=error)
 
 # parameter order:
 # k_olig_inc, k_olig_sep, k_clear_Abeta_brain, k_clear_Abeta_plasma, k_clear_Abeta_csf
@@ -144,10 +144,10 @@ start = np.array([0.924, 0, 0.165, 0.231, 0, 0.165, 0.231, 0, 0.0923, 0, 0.0982,
 #        6.54693652e-03, 9.47700481e-01, 3.30419301e-02, 0.00000000e+00,
 #        1.00000000e+00, 6.68065993e-01, 1.07472400e-01, 1.69385523e-04,
 #        9.93490129e-01, 2.15326288e-03, 1.54677175e-01, 9.99455278e-01])
-# start = start.reshape((1, 20))
+start = start.reshape((1, 20))
 problem = pypesto.Problem(objective=objective, lb=lb, ub=ub, x_guesses=start)#, startpoint_method=custom_startpoints)
 
-optimizer = optimize.ScipyOptimizer(method='ls_trf', options = {'disp': False, 'max_nfev': 2500})
+optimizer = optimize.ScipyOptimizer(options = {'maxfun': 2500})
 
 result = optimize.minimize(problem=problem, optimizer=optimizer, n_starts=10)
 
