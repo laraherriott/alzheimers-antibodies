@@ -125,7 +125,7 @@ def error(x):
     return csf_relative + plasma_relative + plasma_clear_relative + csf_clear_relative + 4*steady_state_error
 
 
-objective = pypesto.Objective(fun=error)
+objective = pypesto.Objective(fun=error, res=error)
 
 # parameter order:
 # k_olig_inc, k_olig_sep, k_clear_Abeta_brain, k_clear_Abeta_plasma, k_clear_Abeta_csf
@@ -138,12 +138,21 @@ lb = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 ub = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
 # initial estimates of parameter values
-# start = np.array([0.924, 0, 0.165, 0.231, 0, 0.165, 0.231, 0, 0.0923, 0, 0.0982, 0.165, 0, 0.0923, 0, 0.0982, 0, 0.065, 0, 0.065])
+start = np.array([0.924, 0, 0.165, 0.231, 0, 0.165, 0.231, 0, 0.0923, 0, 0.0982, 0.165, 0, 0.0923, 0, 0.0982, 0, 0.065, 0, 0.065])
+# start = np.array([4.11026193e-02, 9.94749664e-01, 9.64366261e-01, 1.00000000e+00,
+#        2.27030315e-01, 1.00000000e+00, 9.99979441e-01, 8.78256393e-01,
+#        6.54693652e-03, 9.47700481e-01, 3.30419301e-02, 0.00000000e+00,
+#        1.00000000e+00, 6.68065993e-01, 1.07472400e-01, 1.69385523e-04,
+#        9.93490129e-01, 2.15326288e-03, 1.54677175e-01, 9.99455278e-01])
 # start = start.reshape((1, 20))
-problem = pypesto.Problem(objective=objective, lb=lb, ub=ub)#, x_guesses=start)#, startpoint_method=custom_startpoints)
+problem = pypesto.Problem(objective=objective, lb=lb, ub=ub, x_guesses=start)#, startpoint_method=custom_startpoints)
 
-optimizer = optimize.ScipyOptimizer()
+optimizer = optimize.ScipyOptimizer(method='ls_trf', options = {'disp': False, 'max_nfev': 2500})
 
-result = optimize.minimize(problem=problem, optimizer=optimizer, n_starts=1)
+result = optimize.minimize(problem=problem, optimizer=optimizer, n_starts=10)
 
 print(result.optimize_result.list[0])
+
+file_object = open('no_antibody.txt', 'w')
+file_object.write(str(result.optimize_result.list[0]))
+file_object.close()
