@@ -138,14 +138,14 @@ lb = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 ub = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
 
 # initial estimates of parameter values
-start = np.array([0.924, 0, 0.165, 0.231, 0, 0.165, 0.231, 0, 0.0923, 0, 0.0982, 0.165, 0, 0.0923, 0, 0.0982, 0, 0.065, 0, 0.065])
-# start = np.array([4.11026193e-02, 9.94749664e-01, 9.64366261e-01, 1.00000000e+00,
-#        2.27030315e-01, 1.00000000e+00, 9.99979441e-01, 8.78256393e-01,
-#        6.54693652e-03, 9.47700481e-01, 3.30419301e-02, 0.00000000e+00,
-#        1.00000000e+00, 6.68065993e-01, 1.07472400e-01, 1.69385523e-04,
-#        9.93490129e-01, 2.15326288e-03, 1.54677175e-01, 9.99455278e-01])
-start = start.reshape((1, 20))
-problem = pypesto.Problem(objective=objective, lb=lb, ub=ub, x_guesses=start)#, startpoint_method=custom_startpoints)
+# start = np.array([0.924, 0, 0.165, 0.231, 0, 0.165, 0.231, 0, 0.0923, 0, 0.0982, 0.165, 0, 0.0923, 0, 0.0982, 0, 0.065, 0, 0.065])
+# start = np.array([1.00000000e+00, 3.00829193e-03, 1.00000000e+00, 9.99995759e-01,
+#        1.00000000e+00, 9.99964201e-01, 9.99999605e-01, 1.00000000e+00,
+#        2.13787495e-02, 2.67763908e-01, 9.87481354e-01, 1.46072448e-01,
+#        3.73346988e-03, 6.74741481e-07, 9.99999024e-01, 0.00000000e+00,
+#        9.99994904e-01, 1.04070748e-02, 9.99994237e-01, 1.05828181e-01])
+# start = start.reshape((1, 20))
+problem = pypesto.Problem(objective=objective, lb=lb, ub=ub)#, startpoint_method=custom_startpoints)
 
 optimizer = optimize.ScipyOptimizer(options = {'maxfun': 2500})
 
@@ -153,6 +153,6 @@ result = optimize.minimize(problem=problem, optimizer=optimizer, n_starts=10)
 
 print(result.optimize_result.list[0])
 
-file_object = open('no_antibody.txt', 'w')
+file_object = open('no_antibody_multistart_long.txt', 'w')
 file_object.write(str(result.optimize_result.list[0]))
 file_object.close()
